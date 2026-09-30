@@ -1,0 +1,113 @@
+@font-face { font-family: 'Cabinet Grotesk'; src: url('/fonts/cabinet-grotesk-400.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Cabinet Grotesk'; src: url('/fonts/cabinet-grotesk-500.woff2') format('woff2'); font-weight: 500; font-display: swap; }
+@font-face { font-family: 'Cabinet Grotesk'; src: url('/fonts/cabinet-grotesk-700.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+@font-face { font-family: 'Cabinet Grotesk'; src: url('/fonts/cabinet-grotesk-800.woff2') format('woff2'); font-weight: 800; font-display: swap; }
+
+:root {
+  /* Marca: preto, ouro do logotipo, branco e o verde da hera do teto */
+  --preto: #000000;
+  --ouro: #c29c47;
+  --ouro-claro: #e4cf80;
+  --ouro-escuro: #916528;
+  --hera: #1d3b29;
+  --hera-escura: #0c1d13;
+  --folha: #3b6b48;
+  --branco: #ffffff;
+
+  /* Superfícies para painéis sobre o preto */
+  --sup-1: #111110;
+  --sup-2: #1a1a18;
+  --sup-3: #252522;
+
+  --texto: #ffffff;
+  --texto-2: rgba(255, 255, 255, 0.7);
+  --texto-3: rgba(255, 255, 255, 0.48);
+  --linha: rgba(255, 255, 255, 0.12);
+  --linha-forte: rgba(255, 255, 255, 0.22);
+
+  --erro: #e5695b;
+  --ok: #7fb58c;
+
+  --fonte: 'Cabinet Grotesk', 'Helvetica Neue', Arial, sans-serif;
+
+  --raio-quadro: clamp(14px, 2.2vw, 34px);
+  --raio-m: 18px;
+  --raio-p: 12px;
+  --pill: 999px;
+
+  --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-circ: cubic-bezier(0.785, 0.135, 0.15, 0.86);
+  --ease-saida: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --margem: clamp(16px, 1.25vw, 24px);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--preto);
+  color: var(--texto);
+  font-family: var(--fonte);
+  font-weight: 500;
+  font-size: 17px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+img, video, svg { display: block; max-width: 100%; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; background: none; border: 0; padding: 0; }
+a { color: inherit; }
+
+:focus-visible {
+  outline: 2px solid var(--ouro-claro);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.sr-only {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0);
+  white-space: nowrap; border: 0;
+}
+
+::selection { background: var(--ouro); color: var(--preto); }
+
+/* Botões compartilhados por site, conta e agendamento */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6em;
+  min-height: 48px;
+  padding: 0 1.6em;
+  border-radius: var(--pill);
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 0.3s var(--ease), color 0.3s var(--ease), border-color 0.3s var(--ease), opacity 0.3s var(--ease);
+}
+.btn[disabled] { opacity: 0.4; pointer-events: none; }
+.btn--ouro { background: var(--ouro); color: var(--preto); }
+.btn--ouro:hover { background: var(--ouro-claro); }
+.btn--branco { background: var(--branco); color: var(--preto); }
+.btn--branco:hover { background: rgba(255, 255, 255, 0.18); color: var(--branco); }
+.btn--vidro { background: rgba(255, 255, 255, 0.1); color: var(--branco); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+.btn--vidro:hover { background: var(--branco); color: var(--preto); }
+.btn--linha { border: 1px solid var(--linha-forte); color: var(--branco); }
+.btn--linha:hover { border-color: var(--branco); }
+.btn--preto { background: var(--preto); color: var(--ouro-claro); }
+.btn--preto:hover { background: var(--sup-3); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+}
