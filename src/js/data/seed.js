@@ -5,7 +5,7 @@ import { resumoServicos, processarFila } from './api.js';
 import { emailConfirmacao, emailFatura, emailLivre, preencher } from './templates.js';
 import { minutos, isoDia, primeiroNome } from '../lib/format.js';
 
-const SEED_VERSAO = 4;
+const SEED_VERSAO = 5;
 
 let rnd = mulberry32(20260930);
 function mulberry32(a) {
@@ -154,7 +154,7 @@ export async function semear() {
           if (fimD < agora) status = pesado([['concluido', 90], ['faltou', 4], ['cancelado', 6]]);
           else if (futuro && rnd() < 0.05) status = 'cancelado';
           const p = profissionalPorId(prof);
-          const criadoEm = new Date(inicio.getTime() - Math.floor(1 + rnd() * 9) * 86400000);
+          const criadoEm = new Date(Math.min(inicio.getTime() - Math.floor(1 + rnd() * 9) * 86400000, agora.getTime() - Math.floor(1 + rnd() * 48) * 3600000));
           ags.push({
             id: novoId(), codigo: 'DC' + codigo++, clienteId: cli.id, clienteNome: cli.nome, clienteEmail: cli.email, clienteTelefone: cli.telefone,
             servicos: servs, servicosNomes: r.nomes, profissionalId: prof, profissionalNome: p.nome,
@@ -235,6 +235,7 @@ export async function semear() {
   const assinantes = clientes.filter((c) => c.marketing);
   const enviada = campanhas[1];
   const emEnviada = new Date(enviada.enviadaEm); emEnviada.setHours(10, 2);
+  enviada.enviadaEm = emEnviada.toISOString();
   assinantes.forEach((c) => {
     const vars = { nome: primeiroNome(c.nome) };
     emails.push({

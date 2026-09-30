@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#000000">
+  <title>Painel, DC Barbershop</title>
+  <link rel="icon" href="/brand/monogram.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/src/css/tokens.css">
+  <link rel="stylesheet" href="/src/css/admin.css">
+</head>
+<body class="adm">
+  <a class="adm-pular" href="#conteudo">Ir para o conteúdo</a>
+  <div class="adm-app" id="app">
+    <aside class="adm-lateral" id="lateral" aria-label="Menu principal">
+      <div class="adm-lateral__topo">
+        <a class="adm-logo" href="#/visao-geral" aria-label="DC Barbershop, visão geral"></a>
+        <button class="adm-lateral__fechar" type="button" data-act="menu-fechar" aria-label="Fechar menu"></button>
+      </div>
+      <nav class="adm-nav" id="nav"></nav>
+      <div class="adm-lateral__rodape" id="lateral-rodape"></div>
+    </aside>
+    <div class="adm-veu" id="veu" hidden></div>
+    <div class="adm-principal">
+      <header class="adm-topo" id="topo"></header>
+      <main class="adm-conteudo" id="conteudo" tabindex="-1">
+        <div class="adm-carregando" aria-live="polite">Carregando o painel...</div>
+      </main>
+    </div>
+  </div>
+  <div class="adm-camadas" id="camadas"></div>
+  <div class="adm-toasts" id="toasts" role="status" aria-live="polite"></div>
+  <script type="module" src="/src/js/admin/main.js"></script>
+</body>
+</html>

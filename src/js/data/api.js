@@ -73,9 +73,8 @@ export function horariosLivres({ dia, duracaoMin, candidatos, ignorarId = null }
   return saida;
 }
 
-export function ocupacaoDoDia(dia, candidatos) {
-  const total = horariosLivres({ dia, duracaoMin: PASSO_MIN, candidatos }).length;
-  return total;
+export function horariosLivresNoDia(dia, candidatos) {
+  return horariosLivres({ dia, duracaoMin: PASSO_MIN, candidatos }).length;
 }
 
 // ---------- Contas ----------
@@ -128,6 +127,7 @@ export async function atualizarCliente(id, patch) {
 
 async function garantirCliente({ nome, email, telefone, marketing }) {
   const e = normEmail(email);
+  if (!e) return db.insert('clientes', { nome: nome.trim(), email: '', telefone: telefone || '', senhaHash: null, marketing: false, lembreteDias: 21, origem: 'balcao' });
   const existente = db.listSync('clientes').find((c) => c.email === e);
   if (existente) {
     const patch = {};
@@ -190,13 +190,13 @@ export async function criarAgendamento({ servicos, profissionalId, inicio, clien
     origem,
     observacao,
   });
-  await registrarEmail({ para: c.email, nomePara: c.nome, clienteId: c.id, agendamentoId: ag.id, tipo: 'confirmacao', assunto: `Horário confirmado: ${ag.codigo}`, html: emailConfirmacao(ag) });
+  if (c.email) await registrarEmail({ para: c.email, nomePara: c.nome, clienteId: c.id, agendamentoId: ag.id, tipo: 'confirmacao', assunto: `Horário confirmado: ${ag.codigo}`, html: emailConfirmacao(ag) });
   return ag;
 }
 
 export async function cancelarAgendamento(id, por = 'cliente') {
   const ag = await db.update('agendamentos', id, { status: 'cancelado', canceladoPor: por, canceladoEm: new Date().toISOString() });
-  if (ag) await registrarEmail({ para: ag.clienteEmail, nomePara: ag.clienteNome, clienteId: ag.clienteId, agendamentoId: ag.id, tipo: 'cancelamento', assunto: `Horário cancelado: ${ag.codigo}`, html: emailCancelamento(ag) });
+  if (ag?.clienteEmail) await registrarEmail({ para: ag.clienteEmail, nomePara: ag.clienteNome, clienteId: ag.clienteId, agendamentoId: ag.id, tipo: 'cancelamento', assunto: `Horário cancelado: ${ag.codigo}`, html: emailCancelamento(ag) });
   return ag;
 }
 
@@ -211,19 +211,21 @@ export async function remarcarAgendamento(id, novoInicio, profissionalId) {
   const atualizado = await db.update('agendamentos', id, {
     inicio: new Date(i).toISOString(), fim: new Date(f).toISOString(), profissionalId: pid, profissionalNome: profissionalPorId(pid).nome, status: 'confirmado',
   });
-  await registrarEmail({ para: ag.clienteEmail, nomePara: ag.clienteNome, clienteId: ag.clienteId, agendamentoId: id, tipo: 'confirmacao', assunto: `Horário remarcado: ${ag.codigo}`, html: emailConfirmacao(atualizado) });
+  if (ag.clienteEmail) await registrarEmail({ para: ag.clienteEmail, nomePara: ag.clienteNome, clienteId: ag.clienteId, agendamentoId: id, tipo: 'confirmacao', assunto: `Horário remarcado: ${ag.codigo}`, html: emailConfirmacao(atualizado) });
   return atualizado;
 }
 
 export async function mudarStatus(id, status) {
+  const antes = await db.get('agendamentos', id);
   const ag = await db.update('agendamentos', id, { status });
-  if (status === 'concluido') {
+  const jaAgradecido = db.listSync('emails', (e) => e.agendamentoId === id && e.automacaoId === 'pos-atendimento').length > 0;
+  if (status === 'concluido' && antes?.status !== 'concluido' && !jaAgradecido) {
     const auto = db.listSync('automacoes').find((a) => a.id === 'pos-atendimento');
     const cli = await db.get('clientes', ag.clienteId);
-    if (auto?.ativo && cli) {
+    if (auto?.ativo && cli?.email) {
       const vars = { nome: primeiroNome(cli.nome), barbeiro: ag.profissionalNome };
       await registrarEmail({
-        para: cli.email, nomePara: cli.nome, clienteId: cli.id, tipo: 'automacao', automacaoId: auto.id,
+        para: cli.email, nomePara: cli.nome, clienteId: cli.id, agendamentoId: id, tipo: 'automacao', automacaoId: auto.id,
         assunto: preencher(auto.assunto, vars),
         html: emailLivre({ titulo: preencher(auto.titulo, vars), texto: preencher(auto.texto, vars), cta: auto.cta, ctaUrl: auto.ctaUrl }),
       });
@@ -246,6 +248,10 @@ export async function registrarEmail({ para, nomePara = '', assunto, tipo, html,
 
 // Troca as referências "dc-fatura:ID" pela imagem real antes de mostrar um e-mail.
 export function resolverEmailHtml(html = '') {
+  if (html.includes('/dc-campanha/')) {
+    const camps = db.listSync('campanhas');
+    html = html.replace(/(?:https?:\/\/[^"]*?)?\/dc-campanha\/([\w-]+)/g, (_, id) => camps.find((c) => c.id === id)?.imagemDados || '');
+  }
   if (!html.includes('dc-fatura:')) return html;
   const faturas = db.listSync('faturas');
   return html.replace(/dc-fatura:([\w-]+)/g, (_, id) => faturas.find((f) => f.id === id)?.arquivo || '');
@@ -274,6 +280,16 @@ export async function enviarFatura({ clienteId, agendamentoId = null, numero, va
 
 // ---------- Marketing ----------
 
+function mapaUltimasVisitas() {
+  const ult = new Map();
+  for (const a of db.listSync('agendamentos')) {
+    if (a.status !== 'concluido') continue;
+    const atual = ult.get(a.clienteId);
+    if (!atual || a.inicio > atual.inicio) ult.set(a.clienteId, a);
+  }
+  return ult;
+}
+
 export function ultimaVisita(clienteId) {
   const feitos = db.listSync('agendamentos', (a) => a.clienteId === clienteId && a.status === 'concluido')
     .sort((a, b) => new Date(b.inicio) - new Date(a.inicio));
@@ -287,9 +303,10 @@ export function diasDesde(data) {
 export function publicoCampanha(publico) {
   const clientes = db.listSync('clientes', (c) => c.marketing);
   const futuros = new Set(db.listSync('agendamentos', (a) => a.status === 'confirmado' && new Date(a.inicio) > new Date()).map((a) => a.clienteId));
+  const ult = publico === 'todos' ? null : mapaUltimasVisitas();
   return clientes.filter((c) => {
     if (publico === 'todos') return true;
-    const u = ultimaVisita(c.id);
+    const u = ult.get(c.id);
     const dias = u ? diasDesde(u.inicio) : Infinity;
     if (publico === 'sem-horario') return !futuros.has(c.id);
     if (publico === 'inativos-30') return dias >= 30 && !futuros.has(c.id);
@@ -306,6 +323,15 @@ export const PUBLICOS = [
   { id: 'inativos-60', nome: 'Sem visita há 60 dias ou mais' },
   { id: 'novos', nome: 'Inscritos nos últimos 30 dias' },
 ];
+
+export function proximoEnvioMensal(camp, base = new Date()) {
+  const [h, m] = (camp.horaMes || '10:00').split(':').map(Number);
+  const dia = camp.diaMes || base.getDate();
+  const d = new Date(base.getFullYear(), base.getMonth() + 1, 1, h, m);
+  const ultimoDia = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+  d.setDate(Math.min(dia, ultimoDia));
+  return d.toISOString();
+}
 
 export async function enviarCampanha(id) {
   const camp = await db.get('campanhas', id);
@@ -325,7 +351,7 @@ export async function enviarCampanha(id) {
     };
   });
   await db.insertMany('emails', emails);
-  const proxima = camp.recorrencia === 'mensal' ? (() => { const d = new Date(); d.setMonth(d.getMonth() + 1); return d.toISOString(); })() : null;
+  const proxima = camp.recorrencia === 'mensal' ? proximoEnvioMensal(camp) : null;
   return db.update('campanhas', id, {
     status: camp.recorrencia === 'mensal' ? 'agendada' : 'enviada',
     enviadaEm: agora,
@@ -348,10 +374,11 @@ export async function processarFila() {
   const autos = db.listSync('automacoes', (a) => a.ativo && a.id !== 'pos-atendimento');
   const futuros = new Set(db.listSync('agendamentos', (a) => a.status === 'confirmado' && new Date(a.inicio) > new Date()).map((a) => a.clienteId));
   const jaEnviados = db.listSync('emails', (e) => e.tipo === 'automacao');
+  const ult = mapaUltimasVisitas();
   for (const auto of autos) {
-    for (const c of db.listSync('clientes', (x) => x.marketing)) {
+    for (const c of db.listSync('clientes', (x) => x.marketing && x.email)) {
       if (futuros.has(c.id)) continue;
-      const u = ultimaVisita(c.id);
+      const u = ult.get(c.id);
       if (!u) continue;
       const alvo = auto.id === 'lembrete-corte' ? (c.lembreteDias || auto.dias) : auto.dias;
       const dias = diasDesde(u.inicio);

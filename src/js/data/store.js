@@ -31,10 +31,13 @@ const avisar = (col) => {
   canal?.postMessage({ col });
 };
 
-canal?.addEventListener('message', (e) => ouvintes.forEach((fn) => fn(e.data.col)));
-window.addEventListener('storage', (e) => {
-  if (e.key?.startsWith(PREFIX)) ouvintes.forEach((fn) => fn(e.key.slice(PREFIX.length)));
-});
+if (canal) {
+  canal.addEventListener('message', (e) => ouvintes.forEach((fn) => fn(e.data.col)));
+} else {
+  window.addEventListener('storage', (e) => {
+    if (e.key?.startsWith(PREFIX)) ouvintes.forEach((fn) => fn(e.key.slice(PREFIX.length)));
+  });
+}
 
 export const novoId = () =>
   (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2));
