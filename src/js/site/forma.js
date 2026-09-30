@@ -1,8 +1,20 @@
-// Forma da abertura: um retângulo de cantos arredondados que se fecha num hexágono
-// de ponta para cima, igual às luzes do teto da DC.
+// Forma da abertura: um retângulo de cantos arredondados que se fecha num hexágono,
+// igual às luzes do teto da DC.
 // m = 0 é o retângulo; m = 1 é o hexágono. Coordenadas em pixels.
+// o = 'ponta' (ponta para cima, computador) ou 'plano' (lado reto em cima, celular).
 
-export function pontos(x, y, w, h, m) {
+export function pontos(x, y, w, h, m, o = 'ponta') {
+  if (o === 'plano') {
+    const q = w * 0.25 * m;
+    return [
+      [x + q, y],
+      [x + w - q, y],
+      [x + w, y + h / 2],
+      [x + w - q, y + h],
+      [x + q, y + h],
+      [x, y + h / 2],
+    ];
+  }
   const q = h * 0.25 * m;
   return [
     [x, y + q],
@@ -33,4 +45,4 @@ export function caminho(pts, raio) {
   return d + 'Z';
 }
 
-export const forma = (s) => caminho(pontos(s.x, s.y, s.w, s.h, s.m), s.r);
+export const forma = (s) => caminho(pontos(s.x, s.y, s.w, s.h, s.m, s.o), s.r);

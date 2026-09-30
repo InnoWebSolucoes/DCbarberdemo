@@ -304,6 +304,7 @@
           <div class="telefone" data-telefone aria-hidden="true">
             <div class="telefone__tela">
               <div class="telefone__barra"><span>9:41</span><span class="telefone__ilha"></span><span>5G</span></div>
+              <span class="telefone__toque" data-toque-ponto></span>
               <div class="tela" data-tela>
                 <p class="tela__passo">Passo 1 de 4</p>
                 <p class="tela__titulo">Serviços</p>
@@ -314,13 +315,13 @@
                   <li><span>Combo completo</span><span>40 €</span></li>
                   <li><span>Platinado nevou</span><span>60 €</span></li>
                 </ul>
-                <p class="tela__botao">Continuar, 23 €</p>
+                <p class="tela__botao" data-toque>Continuar, 23 €</p>
               </div>
               <div class="tela" data-tela>
                 <p class="tela__passo">Passo 2 de 4</p>
                 <p class="tela__titulo">Profissional</p>
                 <ul class="tela__pessoas">
-                  <li class="ativo"><span class="tela__qualquer">D</span><span>David</span></li>
+                  <li class="ativo" data-toque><span class="tela__qualquer">D</span><span>David</span></li>
                   <li><span class="tela__qualquer">E</span><span>Emmanuel</span></li>
                   <li><span class="tela__qualquer">DC</span><span>Sem preferência</span></li>
                 </ul>
@@ -330,7 +331,7 @@
                 <p class="tela__passo">Passo 3 de 4</p>
                 <p class="tela__titulo">Sábado, 10 de outubro</p>
                 <p class="tela__grupo">Manhã</p>
-                <ul class="tela__horas"><li>09:00</li><li>09:30</li><li class="ativo">10:30</li><li>11:00</li><li>12:00</li><li>12:30</li></ul>
+                <ul class="tela__horas"><li>09:00</li><li>09:30</li><li class="ativo" data-toque>10:30</li><li>11:00</li><li>12:00</li><li>12:30</li></ul>
                 <p class="tela__grupo">Tarde</p>
                 <ul class="tela__horas"><li>14:00</li><li>15:30</li><li>16:00</li><li>17:30</li><li>18:00</li><li>18:30</li></ul>
                 <p class="tela__botao">Continuar</p>
@@ -403,25 +404,49 @@
       <h2 class="sr-only" id="avaliacoes-titulo">Avaliações de clientes</h2>
       <div class="camera">
         <div class="obturador obturador--largo" data-obturador-avaliacoes>
-          <div class="obturador__janela"><img src="/media/avaliacoes/neon.webp" alt="Barbeiro e cliente sorrindo em frente ao letreiro neon da DC" loading="lazy"></div>
-          <div class="obturador__janela"><img src="/media/avaliacoes/cadeira.webp" alt="David ao lado da cadeira de couro, sob o teto de hexágonos" loading="lazy"></div>
-          <div class="obturador__janela"><img src="/media/avaliacoes/aperto.webp" alt="Barbeiro cumprimentando o cliente depois do corte" loading="lazy"></div>
+          <div class="obturador__janela"><picture><source media="(max-width: 900px)" srcset="/media/avaliacoes-m/neon.webp"><img src="/media/avaliacoes/neon.webp" alt="Barbeiro e cliente sorrindo em frente ao letreiro neon da DC" loading="lazy"></picture></div>
+          <div class="obturador__janela"><picture><source media="(max-width: 900px)" srcset="/media/avaliacoes-m/cadeira.webp"><img src="/media/avaliacoes/cadeira.webp" alt="David ao lado da cadeira de couro, sob o teto de hexágonos" loading="lazy"></picture></div>
+          <div class="obturador__janela"><picture><source media="(max-width: 900px)" srcset="/media/avaliacoes-m/aperto.webp"><img src="/media/avaliacoes/aperto.webp" alt="Barbeiro cumprimentando o cliente depois do corte" loading="lazy"></picture></div>
+          <div class="obturador__janela so-celular"><img src="/media/avaliacoes-m/cadeira-teto.webp" alt="Cliente na cadeira sob as luzes em hexágono" loading="lazy"></div>
+          <div class="obturador__janela so-celular"><img src="/media/avaliacoes-m/equipe.webp" alt="David e Emmanuel se cumprimentando no salão" loading="lazy"></div>
+          <div class="obturador__janela so-celular"><img src="/media/avaliacoes-m/vapor.webp" alt="Barboterapia com vapor na cadeira da DC" loading="lazy"></div>
         </div>
         <div class="depoimentos" data-depoimentos>
-          <figure class="depoimento">
+          <figure class="depoimento" data-plataforma="google" data-autor="Maximino Batista">
+            <span class="depoimento__aspas" aria-hidden="true">“</span>
+            <p class="depoimento__estrelas" aria-label="5 de 5 estrelas">★★★★★</p>
+            <blockquote>Ótimo atendimento, além de ter um excelente profissional cuidando do seu cabelo, ambiente acolhedor e numa região próxima do centro, experiência nota 10!!!</blockquote>
+            <figcaption><strong>Maximino Batista</strong><span>Avaliação no Google</span></figcaption>
+          </figure>
+          <figure class="depoimento" data-plataforma="appbarber">
+            <span class="depoimento__aspas" aria-hidden="true">“</span>
+            <p class="depoimento__estrelas" aria-label="5 de 5 estrelas">★★★★★</p>
+            <blockquote>Excelente profissional e espaço muito acolhedor. Recomendo a 100%.</blockquote>
+            <figcaption><strong>Bruno Silva</strong><span>Avaliação no AppBarber, fevereiro de 2026</span></figcaption>
+          </figure>
+          <figure class="depoimento" data-plataforma="google" data-autor="Henrique Da Costa">
+            <span class="depoimento__aspas" aria-hidden="true">“</span>
+            <p class="depoimento__estrelas" aria-label="5 de 5 estrelas">★★★★★</p>
+            <blockquote>Sou de Paris e é a primeira vez que venho aqui e posso dizer que é o melhor barbeiro que já vi na minha vida!</blockquote>
+            <figcaption><strong>Henrique Da Costa</strong><span>Avaliação no Google</span></figcaption>
+          </figure>
+          <figure class="depoimento so-celular" data-plataforma="appbarber">
+            <span class="depoimento__aspas" aria-hidden="true">“</span>
             <p class="depoimento__estrelas" aria-label="5 de 5 estrelas">★★★★★</p>
             <blockquote>Atendimento impecável.</blockquote>
             <figcaption><strong>Nuno Marinho</strong><span>Avaliação no AppBarber, setembro de 2026</span></figcaption>
           </figure>
-          <figure class="depoimento">
+          <figure class="depoimento so-celular" data-plataforma="google" data-autor="Krzyś Józwowicz">
+            <span class="depoimento__aspas" aria-hidden="true">“</span>
+            <p class="depoimento__estrelas" aria-label="5 de 5 estrelas">★★★★★</p>
+            <blockquote>Vim aqui de férias e voltei com o melhor corte de cabelo que já tive.</blockquote>
+            <figcaption><strong>Krzyś Józwowicz</strong><span>Avaliação no Google</span></figcaption>
+          </figure>
+          <figure class="depoimento so-celular" data-plataforma="appbarber">
+            <span class="depoimento__aspas" aria-hidden="true">“</span>
             <p class="depoimento__estrelas" aria-label="5 de 5 estrelas">★★★★★</p>
             <blockquote>Serviço excelente. Top demais!</blockquote>
             <figcaption><strong>Marcos Aurélio</strong><span>Avaliação no AppBarber, maio de 2026</span></figcaption>
-          </figure>
-          <figure class="depoimento">
-            <p class="depoimento__estrelas" aria-label="5 de 5 estrelas">★★★★★</p>
-            <blockquote>Excelente profissional e espaço muito acolhedor. Recomendo a 100%.</blockquote>
-            <figcaption><strong>Bruno Silva</strong><span>Avaliação no AppBarber, fevereiro de 2026</span></figcaption>
           </figure>
         </div>
       </div>

@@ -1,37 +1,53 @@
 // Abertura: o hexágono de luz do teto se acende, abre o vídeo, e ao rolar
 // o vídeo volta a ser hexágono e entra na colmeia de cortes.
+// Computador: hexágonos de ponta para cima em fileiras que correm para os lados.
+// Celular: hexágonos de lado reto em colunas que sobem e descem, para encher a tela alta.
 import { forma } from '../forma.js';
 
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const vw = (v) => (window.innerWidth * v) / 100;
 
-const s = { x: 0, y: 0, w: 0, h: 0, m: 1, r: 0 };
+const s = { x: 0, y: 0, w: 0, h: 0, m: 1, r: 0, o: 'ponta' };
 let desenhar = () => {};
 
 function medidas(mobile) {
   const camera = $('[data-cena="abertura"] .camera');
   const W = camera.clientWidth;
   const H = camera.clientHeight;
-  const hexW = vw(mobile ? 34 : 16);
+  if (mobile) {
+    const hexW = vw(44);
+    const hexH = hexW * 0.866;
+    const gap = vw(2);
+    return {
+      W, H, hexW, hexH, gap, o: 'plano',
+      passo: hexH + gap, // de um hexágono ao próximo na mesma coluna
+      sx: hexW * 0.75 + gap * 0.866, // distância entre colunas
+      margem: 8, raio: 18,
+    };
+  }
+  const hexW = vw(16);
   const hexH = hexW / 0.866;
-  const gap = vw(mobile ? 2.2 : 1.1);
-  const passo = hexW + gap;
-  const sy = hexH * 0.75 + gap * 0.866;
-  const margem = mobile ? 8 : vw(1);
-  return { W, H, hexW, hexH, gap, passo, sy, margem, raio: mobile ? 18 : vw(2.2) };
+  const gap = vw(1.1);
+  return {
+    W, H, hexW, hexH, gap, o: 'ponta',
+    passo: hexW + gap,
+    sy: hexH * 0.75 + gap * 0.866,
+    margem: vw(1), raio: vw(2.2),
+  };
 }
 
 const quadro = (m) => ({ x: m.margem, y: m.margem, w: m.W - 2 * m.margem, h: m.H - 2 * m.margem, m: 0, r: m.raio });
 const hex = (m, k = 1) => {
   const w = m.hexW * k;
-  const h = w / 0.866;
+  const h = m.hexH * k;
   return { x: (m.W - w) / 2, y: (m.H - h) / 2, w, h, m: 1, r: w * 0.035 };
 };
 
-function ligarDesenho() {
+function ligarDesenho(mobile) {
   const mascara = $('[data-mascara]');
   const neon = $('[data-neon-path]');
+  s.o = mobile ? 'plano' : 'ponta';
   desenhar = () => {
     const d = forma(s);
     mascara.style.clipPath = `path("${d}")`;
@@ -40,7 +56,7 @@ function ligarDesenho() {
 }
 
 export async function introAbertura({ gsap, reduzido, mobile }) {
-  ligarDesenho();
+  ligarDesenho(mobile);
   const mascara = $('[data-mascara]');
   const neonSvg = $('[data-neon]');
   const neonPath = $('[data-neon-path]');
@@ -58,7 +74,7 @@ export async function introAbertura({ gsap, reduzido, mobile }) {
     return;
   }
 
-  Object.assign(s, hex(m, 1));
+  Object.assign(s, hex(m, mobile ? 0.8 : 1));
   desenhar();
   gsap.set(mascara, { opacity: 0 });
   gsap.set(video, { scale: 1.3 });
@@ -92,7 +108,7 @@ export async function introAbertura({ gsap, reduzido, mobile }) {
 }
 
 export function cenaAbertura({ gsap, mobile }) {
-  ligarDesenho();
+  ligarDesenho(mobile);
   const cena = $('[data-cena="abertura"]');
   const mascara = $('[data-mascara]');
   const video = $('[data-hero-video]');
@@ -103,11 +119,6 @@ export function cenaAbertura({ gsap, mobile }) {
   const filaC = $('[data-fila="c"]');
   const emblema = $('[data-emblema-a]');
   const M = () => medidas(mobile);
-
-  // posições das fileiras (x do primeiro hexágono de cada fileira, em px)
-  const xB = (k) => { const m = M(); return m.W / 2 - m.hexW / 2 - 2 * m.passo + k * m.passo; };
-  const xAC = (k) => { const m = M(); return m.W / 2 - m.hexW / 2 - 2.5 * m.passo + k * m.passo; };
-  const yFila = (d) => { const m = M(); return m.H / 2 - m.hexH / 2 + d * m.sy; };
 
   const tl = gsap.timeline({
     defaults: { ease: 'none' },
@@ -131,21 +142,40 @@ export function cenaAbertura({ gsap, mobile }) {
       { x: () => quadro(M()).x, y: () => quadro(M()).y, w: () => quadro(M()).w, h: () => quadro(M()).h, m: 0, r: () => quadro(M()).r },
       { x: () => hex(M()).x, y: () => hex(M()).y, w: () => hex(M()).w, h: () => hex(M()).h, m: 1, r: () => hex(M()).r, duration: 0.22, ease: 'power2.inOut', onUpdate: () => desenhar() },
       0.04)
-    .fromTo(video, { scale: 1 }, { scale: () => (2.3 * M().hexW) / M().W, duration: 0.22, ease: 'power2.inOut' }, 0.04)
+    .fromTo(video, { scale: 1 }, { scale: () => Math.min(1, (2.3 * M().hexW) / M().W), duration: 0.22, ease: 'power2.inOut' }, 0.04)
     .fromTo(veu, { opacity: 1 }, { opacity: 0.12, duration: 0.2 }, 0.04)
+    .fromTo([filaA, filaB, filaC], { opacity: 0 }, { opacity: 1, duration: 0.07 }, 0.19);
 
-    .fromTo([filaA, filaB, filaC], { opacity: 0 }, { opacity: 1, duration: 0.07 }, 0.19)
-    .fromTo(filaB, { x: () => xB(0), y: () => yFila(0) }, { x: () => xB(-4), y: () => yFila(0), duration: 0.44 }, 0.26)
-    .to(filaB, { x: () => xB(-7.5), duration: 0.25, ease: 'power1.in' }, 0.7)
-    .fromTo(filaA, { x: () => xAC(0), y: () => yFila(-1) }, { x: () => xAC(2.5), y: () => yFila(-1), duration: 0.44 }, 0.26)
-    .to(filaA, { x: () => xAC(6.5), duration: 0.25, ease: 'power1.in' }, 0.7)
-    .fromTo(filaC, { x: () => xAC(0), y: () => yFila(1) }, { x: () => xAC(2.5), y: () => yFila(1), duration: 0.44 }, 0.26)
-    .to(filaC, { x: () => xAC(6.5), duration: 0.25, ease: 'power1.in' }, 0.7)
-
-    .fromTo(mascara, { x: 0 }, { x: () => -4 * M().passo, duration: 0.44 }, 0.26)
-    .to(mascara, { x: () => -7.5 * M().passo, duration: 0.25, ease: 'power1.in' }, 0.7)
-    .fromTo(emblema, { x: () => 4 * M().passo, opacity: 1 }, { x: 0, duration: 0.44 }, 0.26)
-    .to({}, { duration: 0.05 }, 0.95);
+  if (mobile) {
+    // Colunas: a do meio sobe (e leva o vídeo), as de fora descem.
+    const yB = (k) => { const m = M(); return m.H / 2 - m.hexH / 2 - 2 * m.passo + k * m.passo; };
+    const yAC = (k) => { const m = M(); return m.H / 2 - m.hexH / 2 - 2.5 * m.passo + k * m.passo; };
+    const xCol = (d) => { const m = M(); return m.W / 2 - m.hexW / 2 + d * m.sx; };
+    tl.fromTo(filaB, { y: () => yB(0), x: () => xCol(0) }, { y: () => yB(-4), x: () => xCol(0), duration: 0.44 }, 0.26)
+      .to(filaB, { y: () => yB(-7.5), duration: 0.25, ease: 'power1.in' }, 0.7)
+      .fromTo(filaA, { y: () => yAC(0), x: () => xCol(-1) }, { y: () => yAC(2.5), x: () => xCol(-1), duration: 0.44 }, 0.26)
+      .to(filaA, { y: () => yAC(6.5), duration: 0.25, ease: 'power1.in' }, 0.7)
+      .fromTo(filaC, { y: () => yAC(0), x: () => xCol(1) }, { y: () => yAC(2.5), x: () => xCol(1), duration: 0.44 }, 0.26)
+      .to(filaC, { y: () => yAC(6.5), duration: 0.25, ease: 'power1.in' }, 0.7)
+      .fromTo(mascara, { y: 0, x: 0 }, { y: () => -4 * M().passo, duration: 0.44 }, 0.26)
+      .to(mascara, { y: () => -7.5 * M().passo, duration: 0.25, ease: 'power1.in' }, 0.7)
+      .fromTo(emblema, { y: () => 4 * M().passo, x: 0, opacity: 1 }, { y: 0, duration: 0.44 }, 0.26);
+  } else {
+    // Fileiras: a do meio vai para a esquerda (e leva o vídeo), as de fora para a direita.
+    const xB = (k) => { const m = M(); return m.W / 2 - m.hexW / 2 - 2 * m.passo + k * m.passo; };
+    const xAC = (k) => { const m = M(); return m.W / 2 - m.hexW / 2 - 2.5 * m.passo + k * m.passo; };
+    const yFila = (d) => { const m = M(); return m.H / 2 - m.hexH / 2 + d * m.sy; };
+    tl.fromTo(filaB, { x: () => xB(0), y: () => yFila(0) }, { x: () => xB(-4), y: () => yFila(0), duration: 0.44 }, 0.26)
+      .to(filaB, { x: () => xB(-7.5), duration: 0.25, ease: 'power1.in' }, 0.7)
+      .fromTo(filaA, { x: () => xAC(0), y: () => yFila(-1) }, { x: () => xAC(2.5), y: () => yFila(-1), duration: 0.44 }, 0.26)
+      .to(filaA, { x: () => xAC(6.5), duration: 0.25, ease: 'power1.in' }, 0.7)
+      .fromTo(filaC, { x: () => xAC(0), y: () => yFila(1) }, { x: () => xAC(2.5), y: () => yFila(1), duration: 0.44 }, 0.26)
+      .to(filaC, { x: () => xAC(6.5), duration: 0.25, ease: 'power1.in' }, 0.7)
+      .fromTo(mascara, { x: 0, y: 0 }, { x: () => -4 * M().passo, duration: 0.44 }, 0.26)
+      .to(mascara, { x: () => -7.5 * M().passo, duration: 0.25, ease: 'power1.in' }, 0.7)
+      .fromTo(emblema, { x: () => 4 * M().passo, y: 0, opacity: 1 }, { x: 0, duration: 0.44 }, 0.26);
+  }
+  tl.to({}, { duration: 0.05 }, 0.95);
 
   const aoRedimensionar = () => { if (tl.scrollTrigger?.progress === 0) { Object.assign(s, quadro(M())); desenhar(); } };
   window.addEventListener('resize', aoRedimensionar);

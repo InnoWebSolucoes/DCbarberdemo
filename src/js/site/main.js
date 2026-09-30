@@ -199,14 +199,10 @@ async function iniciar() {
     cenaCasa(ctx);
     cenaCombo(ctx);
     cenaFinal(ctx);
-    if (c.conditions.desktop) {
-      cenaServicos(ctx);
-      cenaApp(ctx);
-      cenaEquipe(ctx);
-      cenaAvaliacoes(ctx);
-    } else {
-      cenaEquipe(ctx);
-    }
+    if (c.conditions.desktop) cenaServicos(ctx);
+    cenaApp(ctx);
+    cenaEquipe(ctx);
+    cenaAvaliacoes(ctx);
   });
   ScrollTrigger.refresh();
 

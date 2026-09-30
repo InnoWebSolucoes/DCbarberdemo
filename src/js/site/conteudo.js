@@ -75,7 +75,7 @@ export function montarRegua() {
     const selo = selos[m];
     html += `<div class="regua__tick ${grande ? 'regua__tick--grande' : ''}">
       ${grande ? `<span>${m} min</span>` : ''}
-      ${selo ? `<div class="regua__selo"><img src="/media/combo/${selo}.webp" alt="${nomes[selo]}" loading="lazy"></div>` : ''}
+      ${selo ? `<div class="regua__selo" data-selo="${selo}"><img src="/media/combo/${selo}.webp" alt="${nomes[selo]}" loading="lazy"><span>${nomes[selo]}</span></div>` : ''}
     </div>`;
   }
   trilho.innerHTML = html;

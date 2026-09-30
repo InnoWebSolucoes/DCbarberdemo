@@ -28,9 +28,23 @@ export function cenaCombo({ gsap, mobile }) {
   const L = linha.getTotalLength();
   gsap.set(linha, { strokeDasharray: L, strokeDashoffset: L });
 
+  // Selo de cada etapa: acende quando a etapa passa pelo ponteiro (o estilo existe só no celular)
+  const selos = $$('[data-selo]');
+  const seloDaEtapa = ['corte', 'barboterapia', 'sobrancelha', 'rosto', 'rosto', null];
+  let seloAtivo;
+  const marcarSelo = (t) => {
+    let k = -1;
+    for (let i = 0; i < K; i++) if (t >= tk(i) - 0.04) k = i;
+    const nome = k >= 0 ? seloDaEtapa[k] : null;
+    if (nome === seloAtivo) return;
+    seloAtivo = nome;
+    selos.forEach((el) => el.classList.toggle('ativo', el.dataset.selo === nome));
+  };
+
   const tl = gsap.timeline({
     defaults: { ease: 'none' },
     scrollTrigger: { trigger: cena, start: 'top top', end: 'bottom bottom', scrub: 1, invalidateOnRefresh: true },
+    onUpdate: () => marcarSelo(tl.time()),
   });
   tl.set({}, {}, 1);
 
