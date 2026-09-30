@@ -73,8 +73,9 @@ export function montarRegua() {
   for (let m = 0; m <= 150; m += 5) {
     const grande = m % 15 === 0;
     const selo = selos[m];
-    html += `<div class="regua__tick ${grande ? 'regua__tick--grande' : ''}">
-      ${grande ? `<span>${m} min</span>` : ''}
+    const classes = ['regua__tick', grande && 'regua__tick--grande', m > 120 && 'regua__tick--alem'].filter(Boolean).join(' ');
+    html += `<div class="${classes}">
+      ${grande ? `<span class="${m % 30 ? 'regua__rotulo-meio' : ''}">${m} min</span>` : ''}
       ${selo ? `<div class="regua__selo" data-selo="${selo}"><img src="/media/combo/${selo}.webp" alt="${nomes[selo]}" loading="lazy"><span>${nomes[selo]}</span></div>` : ''}
     </div>`;
   }
@@ -84,7 +85,7 @@ export function montarRegua() {
 // No celular os serviços viram uma lista com a mídia em cima de cada texto
 export function montarServicosMobile() {
   const janelas = $$('[data-obturador] .obturador__janela');
-  $$('.servico-texto').forEach((art, i) => {
+  $$('.servicos__textos .servico-texto').forEach((art, i) => {
     if ($('.servico-texto__midia', art)) return;
     const orig = janelas[i]?.firstElementChild;
     if (!orig) return;

@@ -126,6 +126,16 @@
               <p>Pausa para almoço das 13h às 14h. Na quarta, a casa fecha às 18h30.</p>
             </li>
           </ul>
+          <div class="casa__servico so-celular" data-casa-servico>
+            <p class="titulo-secao casa__servico-titulo">Do degradê<br>ao platinado.</p>
+            <article class="servico-texto servico-texto--casa">
+              <div class="servico-texto__midia"><img src="/media/servicos/corte.webp" alt="Corte com textura no topo e degradê baixo, feito na DC" loading="lazy"></div>
+              <h3>Corte</h3>
+              <p>Degradê, social, tesoura ou máquina. Diga como quer ou mostre uma foto. O barbeiro ajusta ao formato do seu rosto e ao jeito do seu cabelo.</p>
+              <p class="servico-texto__preco"><strong>15 €</strong><span>30 min</span></p>
+              <button class="link-agendar" type="button" data-agendar data-servicos="corte">Agendar corte</button>
+            </article>
+          </div>
         </div>
         <div class="hex hex--emblema casa__emblema" data-emblema-b aria-hidden="true"><span data-logo="mono"></span></div>
       </div>
@@ -407,16 +417,13 @@
           <div class="obturador__janela"><picture><source media="(max-width: 900px)" srcset="/media/avaliacoes-m/neon.webp"><img src="/media/avaliacoes/neon.webp" alt="Barbeiro e cliente sorrindo em frente ao letreiro neon da DC" loading="lazy"></picture></div>
           <div class="obturador__janela"><picture><source media="(max-width: 900px)" srcset="/media/avaliacoes-m/cadeira.webp"><img src="/media/avaliacoes/cadeira.webp" alt="David ao lado da cadeira de couro, sob o teto de hexágonos" loading="lazy"></picture></div>
           <div class="obturador__janela"><picture><source media="(max-width: 900px)" srcset="/media/avaliacoes-m/aperto.webp"><img src="/media/avaliacoes/aperto.webp" alt="Barbeiro cumprimentando o cliente depois do corte" loading="lazy"></picture></div>
-          <div class="obturador__janela so-celular"><img src="/media/avaliacoes-m/cadeira-teto.webp" alt="Cliente na cadeira sob as luzes em hexágono" loading="lazy"></div>
-          <div class="obturador__janela so-celular"><img src="/media/avaliacoes-m/equipe.webp" alt="David e Emmanuel se cumprimentando no salão" loading="lazy"></div>
-          <div class="obturador__janela so-celular"><img src="/media/avaliacoes-m/vapor.webp" alt="Barboterapia com vapor na cadeira da DC" loading="lazy"></div>
         </div>
         <div class="depoimentos" data-depoimentos>
           <figure class="depoimento" data-plataforma="google" data-autor="Maximino Batista">
             <span class="depoimento__aspas" aria-hidden="true">“</span>
             <p class="depoimento__estrelas" aria-label="5 de 5 estrelas">★★★★★</p>
             <blockquote>Ótimo atendimento, além de ter um excelente profissional cuidando do seu cabelo, ambiente acolhedor e numa região próxima do centro, experiência nota 10!!!</blockquote>
-            <figcaption><strong>Maximino Batista</strong><span>Avaliação no Google</span></figcaption>
+            <figcaption><strong>Maximino Batista</strong><span>Avaliação no Google, fevereiro de 2026</span></figcaption>
           </figure>
           <figure class="depoimento" data-plataforma="appbarber">
             <span class="depoimento__aspas" aria-hidden="true">“</span>
@@ -427,26 +434,8 @@
           <figure class="depoimento" data-plataforma="google" data-autor="Henrique Da Costa">
             <span class="depoimento__aspas" aria-hidden="true">“</span>
             <p class="depoimento__estrelas" aria-label="5 de 5 estrelas">★★★★★</p>
-            <blockquote>Sou de Paris e é a primeira vez que venho aqui e posso dizer que é o melhor barbeiro que já vi na minha vida!</blockquote>
-            <figcaption><strong>Henrique Da Costa</strong><span>Avaliação no Google</span></figcaption>
-          </figure>
-          <figure class="depoimento so-celular" data-plataforma="appbarber">
-            <span class="depoimento__aspas" aria-hidden="true">“</span>
-            <p class="depoimento__estrelas" aria-label="5 de 5 estrelas">★★★★★</p>
-            <blockquote>Atendimento impecável.</blockquote>
-            <figcaption><strong>Nuno Marinho</strong><span>Avaliação no AppBarber, setembro de 2026</span></figcaption>
-          </figure>
-          <figure class="depoimento so-celular" data-plataforma="google" data-autor="Krzyś Józwowicz">
-            <span class="depoimento__aspas" aria-hidden="true">“</span>
-            <p class="depoimento__estrelas" aria-label="5 de 5 estrelas">★★★★★</p>
-            <blockquote>Vim aqui de férias e voltei com o melhor corte de cabelo que já tive.</blockquote>
-            <figcaption><strong>Krzyś Józwowicz</strong><span>Avaliação no Google</span></figcaption>
-          </figure>
-          <figure class="depoimento so-celular" data-plataforma="appbarber">
-            <span class="depoimento__aspas" aria-hidden="true">“</span>
-            <p class="depoimento__estrelas" aria-label="5 de 5 estrelas">★★★★★</p>
-            <blockquote>Serviço excelente. Top demais!</blockquote>
-            <figcaption><strong>Marcos Aurélio</strong><span>Avaliação no AppBarber, maio de 2026</span></figcaption>
+            <blockquote>Sou de Paris e é a primeira vez que venho aqui e posso dizer que é o melhor barbeiro que já vi na minha vida! Muito obrigado!</blockquote>
+            <figcaption><strong>Henrique Da Costa</strong><span>Avaliação no Google, fevereiro de 2026</span></figcaption>
           </figure>
         </div>
       </div>
@@ -469,6 +458,7 @@
         </div>
         <div class="precos__lista" data-precos-lista></div>
       </div>
+      <div class="tabela-m" data-tabela-m></div>
       <div class="produtos">
         <img class="produtos__foto" src="/media/tabela/produtos.webp" alt="Tesouras, pentes, navalha e máquina sobre bancada escura" loading="lazy">
         <div class="produtos__texto">

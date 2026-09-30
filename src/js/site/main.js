@@ -6,6 +6,7 @@ import logoFull from '../../assets/logo-full.svg?raw';
 import { garantirDados } from '../data/seed.js';
 import { assinarNewsletter } from '../data/api.js';
 import { montarTabela, montarProdutos, montarHorarios, montarRegua, montarServicosMobile } from './conteudo.js';
+import { montarTabelaCelular } from './tabela-celular.js';
 import { introAbertura, cenaAbertura } from './cenas/abertura.js';
 import { cenaCasa } from './cenas/casa.js';
 import { cenaServicos } from './cenas/servicos.js';
@@ -77,13 +78,22 @@ const cortina = $('[data-cortina]');
 const DESLOCAMENTO = { '#equipe': 0.4, '#servicos': 0.01, '#combo': 0.02 };
 let pulando = false;
 export async function pular(hash, { instantaneo = false } = {}) {
-  const alvo = hash && hash !== '#' ? $(hash) : null;
-  if (!alvo || pulando) return;
-  pulando = true;
-  abrirMenu(false);
+  let alvo = hash && hash !== '#' ? $(hash) : null;
+  if (hash === '#servicos' && ehMobile()) {
+    const casa = $('[data-cena="casa"]');
+    const y = casa.getBoundingClientRect().top + window.scrollY + 0.97 * (casa.offsetHeight - innerHeight);
+    return pularPara(y, hash, instantaneo);
+  }
+  if (!alvo) return;
   const topoDoc = alvo.getBoundingClientRect().top + window.scrollY;
   const extra = (DESLOCAMENTO[hash] || 0) * Math.max(0, alvo.offsetHeight - innerHeight);
-  const y = Math.max(0, topoDoc + (ehMobile() && DESLOCAMENTO[hash] ? 0 : extra));
+  return pularPara(Math.max(0, topoDoc + (ehMobile() && DESLOCAMENTO[hash] ? 0 : extra)), hash, instantaneo);
+}
+
+async function pularPara(y, hash, instantaneo) {
+  if (pulando) return;
+  pulando = true;
+  abrirMenu(false);
   if (instantaneo || reduzido) {
     lenis.scrollTo(y, { immediate: true, force: true });
     pulando = false;
@@ -200,6 +210,7 @@ async function iniciar() {
     cenaCombo(ctx);
     cenaFinal(ctx);
     if (c.conditions.desktop) cenaServicos(ctx);
+    else montarTabelaCelular();
     cenaApp(ctx);
     cenaEquipe(ctx);
     cenaAvaliacoes(ctx);
