@@ -1,3 +1,4 @@
+import { url } from '../../lib/base.js';
 // Serviços: a janela de cada serviço fecha para cima enquanto a próxima abre por baixo.
 // As imagens não se mexem; só a janela anda. Abas, textos e preços acompanham.
 const $ = (s, el = document) => el.querySelector(s);
@@ -23,7 +24,7 @@ export function cenaServicos({ gsap, lenis }) {
   const midia = (i) => janelas[i]?.firstElementChild;
   const carregar = (i) => {
     const v = midia(i);
-    if (v?.tagName === 'VIDEO' && v.dataset.src && !v.src) { v.src = v.dataset.src; v.load(); }
+    if (v?.tagName === 'VIDEO' && v.dataset.src && !v.src) { v.src = url(v.dataset.src); v.load(); }
   };
   const tocar = () => janelas.forEach((j, i) => {
     const v = midia(i);

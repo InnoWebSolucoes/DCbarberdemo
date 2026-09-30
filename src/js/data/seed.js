@@ -5,7 +5,7 @@ import { resumoServicos, processarFila } from './api.js';
 import { emailConfirmacao, emailFatura, emailLivre, preencher } from './templates.js';
 import { minutos, isoDia, primeiroNome } from '../lib/format.js';
 
-const SEED_VERSAO = 6;
+const SEED_VERSAO = 7;
 
 let rnd = mulberry32(20260930);
 function mulberry32(a) {

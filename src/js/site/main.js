@@ -15,6 +15,7 @@ import { cenaApp } from './cenas/app.js';
 import { cenaEquipe } from './cenas/equipe.js';
 import { cenaAvaliacoes } from './cenas/avaliacoes.js';
 import { cenaFinal } from './cenas/final.js';
+import { url } from '../lib/base.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -143,7 +144,7 @@ window.addEventListener('dc:modal', (e) => {
 
 // ---------- Vídeos: carregam perto da tela e só tocam quando visíveis ----------
 const carregar = (v) => {
-  if (v.dataset.src && !v.src) { v.src = v.dataset.src; v.load(); }
+  if (v.dataset.src && !v.src) { v.src = url(v.dataset.src); v.load(); }
 };
 const obsCarga = new IntersectionObserver((es) => es.forEach((e) => e.isIntersecting && carregar(e.target)), { rootMargin: '600px 0px' });
 const obsPlay = new IntersectionObserver((es) => es.forEach((e) => {
@@ -190,8 +191,8 @@ form?.addEventListener('submit', async (e) => {
 
 // ---------- Cenas ----------
 const video = $('[data-hero-video]');
-video.src = ehMobile() ? '/media/video/hero-mobile.mp4' : '/media/video/hero.mp4';
-if (ehMobile()) video.poster = '/media/video/hero-mobile.jpg';
+video.src = url(ehMobile() ? '/media/video/hero-mobile.mp4' : '/media/video/hero.mp4');
+if (ehMobile()) video.poster = url('/media/video/hero-mobile.jpg');
 
 const ctxBase = { gsap, ScrollTrigger, lenis, topo: controleTopo, reduzido };
 

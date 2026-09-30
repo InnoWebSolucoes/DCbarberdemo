@@ -6,16 +6,22 @@ The first version of the DC Barbershop website (Rua de Faria Guimarães 214, Por
 
 ```bash
 npm install
-npm run dev        # http://localhost:5180
-npm run build      # static build in dist/
+npm run dev        # http://localhost:5180/dcbarber/
+npm run build      # static build in dist/dcbarber/
 npm run preview    # serves the build
 ```
 
 | Page | URL | What it does |
 |---|---|---|
-| Site | `/` | Scroll-driven landing page, price list, booking |
-| Client account | `/conta/` | Sign in, upcoming bookings, reschedule, invoices, emails received, reminder settings |
-| Admin | `/admin/` | Agenda, bookings, clients, invoices sent by email, email marketing, sent-mail log. No password yet |
+| Site | `/dcbarber/` | Scroll-driven landing page, price list, booking |
+| Client account | `/dcbarber/conta/` | Sign in, upcoming bookings, reschedule, invoices, emails received, reminder settings |
+| Admin | `/dcbarber/admin/` | Agenda, bookings, clients, invoices sent by email, email marketing, sent-mail log. No password yet |
+
+## Where it lives
+
+- Public URL: https://innoweb.agency/dcbarber (the innoweb.agency Next.js project rewrites `/dcbarber/*` to this project's Vercel deployment).
+- The site is built with Vite `base: '/dcbarber/'` into `dist/dcbarber/`. In JavaScript, build paths with `url()` from `src/js/lib/base.js`, never a bare "/media/...".
+- To move it to its own domain later, change `BASE` in `vite.config.js` to `'/'` and `outDir` to `dist`.
 
 ## How it is built
 

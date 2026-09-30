@@ -6,6 +6,7 @@ import { abrirCamada, topoCamada, toast, confirmar, kb } from '../ui.js';
 import { comprimirImagem } from '../arquivos.js';
 import { srcdoc } from './email.js';
 import { imagemOk } from '../imagens.js';
+import { url as caminho } from '../../lib/base.js';
 import { db } from '../../data/store.js';
 import { PUBLICOS, enviarCampanha } from '../../data/api.js';
 import { emailLivre, preencher } from '../../data/templates.js';
@@ -169,7 +170,7 @@ export function abrirCampanha(id = null, preset = null) {
     if (st.lendoImagem) return html`<div class="soltar is-lendo"><span class="giro"></span><p><strong>Preparando a imagem</strong></p></div>`;
     if (src) {
       return html`<div class="anexo-escolhido anexo-escolhido--larga">
-        <img src="${src}" alt="">
+        <img src="${caminho(src)}" alt="">
         <span class="anexo-escolhido__info"><strong>${st.imagemDados ? 'Imagem enviada' : src.split('/').pop()}</strong>
           <small>${st.imagemInfo ? `JPG ${st.imagemInfo.largura}x${st.imagemInfo.altura}, ${kb(st.imagemInfo.bytes)}` : 'Aparece no topo do e-mail'}</small></span>
         <span class="anexo-escolhido__acoes">

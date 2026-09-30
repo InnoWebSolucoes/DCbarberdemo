@@ -1,5 +1,7 @@
 // Verifica se as imagens de exemplo das campanhas existem no site.
 // As que não carregam são tiradas das pré-visualizações para não aparecer um ícone quebrado.
+import { url as caminho } from '../lib/base.js';
+
 const estado = new Map();
 
 export function verificarImagem(url, aoTerminar) {
@@ -9,7 +11,7 @@ export function verificarImagem(url, aoTerminar) {
   const img = new Image();
   img.onload = () => { estado.set(url, true); aoTerminar?.(); };
   img.onerror = () => { estado.set(url, false); aoTerminar?.(); };
-  img.src = url;
+  img.src = caminho(url);
 }
 
 export const imagemOk = (url) => !url || estado.get(url) !== false;

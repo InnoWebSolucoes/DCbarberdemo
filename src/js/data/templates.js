@@ -1,8 +1,10 @@
 // Modelos de e-mail em HTML (tabelas e estilos inline, como os clientes de e-mail exigem).
 import { negocio } from './catalog.js';
 import { escapeHtml, moeda, duracao, dataLonga, hhmm, primeiroNome } from '../lib/format.js';
+import { raiz } from '../lib/base.js';
 
-const origem = () => (typeof location !== 'undefined' ? location.origin : '');
+const origem = raiz;
+const absoluto = (u) => (u && u.startsWith('/') && !u.startsWith('//') ? raiz() + u : u);
 
 export const preencher = (texto = '', vars = {}) =>
   texto.replace(/\{\{\s*(\w+)\s*\}\}/g, (_, k) => (vars[k] != null ? vars[k] : ''));
@@ -15,7 +17,7 @@ const paragrafos = (texto = '') =>
 
 const botao = (label, url) => `
   <table role="presentation" cellspacing="0" cellpadding="0" style="margin:8px 0 24px"><tr><td style="background:#000;border-radius:999px">
-    <a href="${url}" style="display:inline-block;padding:14px 28px;font:600 15px/1 'Helvetica Neue',Arial,sans-serif;color:#E4CF80;text-decoration:none">${escapeHtml(label)}</a>
+    <a href="${absoluto(url)}" style="display:inline-block;padding:14px 28px;font:600 15px/1 'Helvetica Neue',Arial,sans-serif;color:#E4CF80;text-decoration:none">${escapeHtml(label)}</a>
   </td></tr></table>`;
 
 export function layout({ preheader = '', titulo = '', corpo = '', rodapeExtra = '' }) {

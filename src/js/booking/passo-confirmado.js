@@ -9,6 +9,7 @@ import { diaLongo, diasEntre } from './datas.js';
 import { baixarIcs } from './ics.js';
 import { animarConfirmacao, gsap, SAIDA } from './movimento.js';
 import { diasSemana } from '../data/catalog.js';
+import { url } from '../lib/base.js';
 
 const W = 120, H = 104;
 
@@ -30,7 +31,7 @@ export function montar(ctx) {
   const ag = estado.resultado;
   const remarcado = estado.modo === 'remarcar';
   const inicio = new Date(ag.inicio);
-  const naConta = location.pathname.replace(/\/+$/, '') === '/conta';
+  const naConta = location.pathname.replace(/\/+$/, '') === url('/conta');
 
   const raiz = el(`
     <div class="ag-passo ag-fim">
@@ -75,7 +76,7 @@ export function montar(ctx) {
           <p>${texto}</p>
           ${naConta
             ? '<button type="button" class="btn btn--branco" data-acao="fechar">Ver minha conta</button>'
-            : '<a class="btn btn--branco" href="/conta/">Ver minha conta</a>'}
+            : `<a class="btn btn--branco" href="${url('/conta/')}">Ver minha conta</a>`}
         </div>`;
       return;
     }

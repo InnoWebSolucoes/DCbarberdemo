@@ -1,3 +1,4 @@
+import { url } from '../lib/base.js';
 // Dados reais da DC Barbershop (fonte: AppBarber, set/2026).
 // Preços em euro. "aPartir" indica preço mínimo; "consultar" indica preço sob consulta.
 
@@ -40,7 +41,7 @@ export const equipe = [
     nomeCompleto: 'David Azevedo',
     funcao: 'Barbeiro',
     resumo: 'Degradê, barba na navalha, luzes e platinado.',
-    foto: '/media/equipe/david.webp',
+    foto: url('/media/equipe/david.webp'),
     grupo: 'barbearia',
   },
   {
@@ -49,7 +50,7 @@ export const equipe = [
     nomeCompleto: 'Emmanuel Teles',
     funcao: 'Barbeiro',
     resumo: 'Cortes com textura, cabelo cacheado e crespo, desenho e acabamento fino.',
-    foto: '/media/equipe/emmanuel.webp',
+    foto: url('/media/equipe/emmanuel.webp'),
     grupo: 'barbearia',
   },
   {
@@ -58,7 +59,7 @@ export const equipe = [
     nomeCompleto: 'Clayre de Freitas',
     funcao: 'Sobrancelhas e beleza',
     resumo: 'Design de sobrancelhas, brow lamination, spa dos lábios, maquiagem e penteado.',
-    foto: '/media/equipe/clayre.webp',
+    foto: url('/media/equipe/clayre.webp'),
     grupo: 'estudio',
   },
 ];

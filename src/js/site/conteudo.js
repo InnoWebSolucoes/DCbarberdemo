@@ -1,6 +1,7 @@
 // Monta as partes da página que vêm dos dados reais (tabela, produtos, horários, régua do combo).
 import { categorias, servicos, produtos, horarios, diasSemana } from '../data/catalog.js';
 import { precoServico, duracao, moeda, escapeHtml } from '../lib/format.js';
+import { url } from '../lib/base.js';
 
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
@@ -76,7 +77,7 @@ export function montarRegua() {
     const classes = ['regua__tick', grande && 'regua__tick--grande', m > 120 && 'regua__tick--alem'].filter(Boolean).join(' ');
     html += `<div class="${classes}">
       ${grande ? `<span class="${m % 30 ? 'regua__rotulo-meio' : ''}">${m} min</span>` : ''}
-      ${selo ? `<div class="regua__selo" data-selo="${selo}"><img src="/media/combo/${selo}.webp" alt="${nomes[selo]}" loading="lazy"><span>${nomes[selo]}</span></div>` : ''}
+      ${selo ? `<div class="regua__selo" data-selo="${selo}"><img src="${url(`/media/combo/${selo}.webp`)}" alt="${nomes[selo]}" loading="lazy"><span>${nomes[selo]}</span></div>` : ''}
     </div>`;
   }
   trilho.innerHTML = html;

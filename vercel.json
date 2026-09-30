@@ -1,0 +1,19 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": null,
+  "redirects": [
+    { "source": "/", "destination": "/dcbarber/", "permanent": false }
+  ],
+  "rewrites": [
+    { "source": "/dcbarber", "destination": "/dcbarber/index.html" },
+    { "source": "/dcbarber/conta", "destination": "/dcbarber/conta/index.html" },
+    { "source": "/dcbarber/admin", "destination": "/dcbarber/admin/index.html" }
+  ],
+  "headers": [
+    {
+      "source": "/dcbarber/(media|fonts|brand|assets)/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+    }
+  ]
+}

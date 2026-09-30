@@ -20,6 +20,7 @@ import faturas from './telas/faturas.js';
 import marketing from './telas/marketing.js';
 import emails from './telas/emails.js';
 import config from './telas/config.js';
+import { url } from '../lib/base.js';
 
 const ROTAS = {
   'visao-geral': { nome: 'Visão geral', tela: visao, grupo: 1 },
@@ -94,7 +95,7 @@ function desenharRodape() {
   render(el.rodape, html`
     <strong>DC Barbershop</strong>
     Rua de Faria Guimarães, 214<br>Porto
-    <div><a class="adm-lateral__site" href="/" target="_blank" rel="noopener">Abrir o site ${icon('externo', 14)}</a></div>
+    <div><a class="adm-lateral__site" href="${url('/')}" target="_blank" rel="noopener">Abrir o site ${icon('externo', 14)}</a></div>
     <p class="adm-fila">${quando ? `Lembretes verificados às ${hhmm(new Date(quando))}` : 'Lembretes ainda não verificados'}</p>`);
 }
 

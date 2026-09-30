@@ -1,6 +1,7 @@
 // Gera e baixa um arquivo .ics (iCalendar) para um agendamento.
 import { negocio } from '../data/catalog.js';
 import { duracao as fmtDuracao } from '../lib/format.js';
+import { raiz } from '../lib/base.js';
 
 const p2 = (n) => String(n).padStart(2, '0');
 
@@ -62,7 +63,7 @@ export function gerarIcs(ag) {
     `LOCATION:${txt(`${negocio.nome}, ${negocio.endereco}, ${negocio.cidade}`)}`,
     `DESCRIPTION:${txt(descricao)}`,
     `GEO:${negocio.coords.lat};${negocio.coords.lng}`,
-    `URL:${typeof location !== 'undefined' ? location.origin : ''}/conta/`,
+    `URL:${raiz()}/conta/`,
     'STATUS:CONFIRMED',
     'BEGIN:VALARM',
     'ACTION:DISPLAY',

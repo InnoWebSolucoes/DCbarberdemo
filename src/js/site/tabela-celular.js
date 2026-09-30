@@ -3,6 +3,7 @@
 import gsap from 'gsap';
 import { categorias, servicos } from '../data/catalog.js';
 import { precoServico, duracao, moeda, escapeHtml } from '../lib/format.js';
+import { url } from '../lib/base.js';
 
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
@@ -50,7 +51,7 @@ export function montarTabelaCelular() {
     const nota = c.id === 'estudio' ? 'Com a Clayre, no estúdio dentro da DC' : `${itens.length} serviços, ${faixa(itens)}`;
     return `
       <div class="tabela-m__capa">
-        <img src="/media/tabela/${CAPAS[c.id]}.webp" alt="" loading="lazy">
+        <img src="${url(`/media/tabela/${CAPAS[c.id]}.webp`)}" alt="" loading="lazy">
         <div class="tabela-m__capa-texto">
           <p class="tabela-m__contagem">${i + 1} de ${categorias.length}</p>
           <h3>${escapeHtml(c.nome)}</h3>
