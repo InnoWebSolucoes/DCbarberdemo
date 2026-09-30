@@ -4,3 +4,6 @@ dist
 *.log
 .vite
 scratch/
+
+.vercel
+.env*
