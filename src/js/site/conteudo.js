@@ -93,7 +93,14 @@ export function montarServicosMobile() {
     const midia = document.createElement('div');
     midia.className = 'servico-texto__midia';
     const clone = orig.cloneNode(true);
-    if (clone.tagName === 'VIDEO') clone.setAttribute('data-auto', '');
+    if (clone.tagName === 'VIDEO') {
+      // vídeo clonado precisa ser marcado como mudo pela propriedade, senão o celular não deixa tocar sozinho
+      clone.setAttribute('data-auto', '');
+      clone.muted = true;
+      clone.defaultMuted = true;
+      clone.playsInline = true;
+      clone.setAttribute('autoplay', '');
+    }
     midia.appendChild(clone);
     art.prepend(midia);
   });

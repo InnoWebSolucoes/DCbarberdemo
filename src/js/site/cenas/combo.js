@@ -18,8 +18,8 @@ export function cenaCombo({ gsap, mobile }) {
   const passos = $$('[data-combo-passos] li');
   const fim = $('[data-combo-fim]');
 
-  // No celular a régua fica parada, de 0 a 120 minutos na largura da tela, e o ponteiro anda sobre ela
-  const pxMin = () => vw(mobile ? 3.1667 : 1.25) / 5;
+  // A régua fica parada, de 0 a 120 minutos na largura da tela, e o ponteiro anda sobre ela
+  const pxMin = () => vw(3.1667) / 5;
   const ponteiro = $('.regua__ponteiro');
   const centro = (k) => window.innerWidth / 2 - (itens[k].offsetLeft + itens[k].offsetWidth / 2);
   const K = MARCOS.length;
@@ -53,15 +53,14 @@ export function cenaCombo({ gsap, mobile }) {
   tl.to(intro, { yPercent: -60, opacity: 0, duration: 0.08, ease: 'power1.in' }, 0.06)
     .fromTo([regua, curva], { opacity: 0 }, { opacity: 1, duration: 0.06 }, 0.1)
     .fromTo(palavras, { opacity: 0, x: () => centro(0) + vw(45) }, { opacity: 1, x: () => centro(0), duration: tk(0) - 0.1, ease: 'power2.out' }, 0.1)
-    .fromTo(trilho, { x: () => vw(30) }, { x: 0, duration: tk(0) - 0.1, ease: 'power2.out' }, 0.1)
+    .fromTo(trilho, { x: () => vw(12) }, { x: 0, duration: tk(0) - 0.1, ease: 'power2.out' }, 0.1)
     .to(linha, { strokeDashoffset: 0, duration: FIM - tk(0) }, tk(0));
 
-  if (mobile) tl.fromTo(ponteiro, { x: 0 }, { x: 0, duration: 0.01 }, 0);
+  tl.fromTo(ponteiro, { x: 0 }, { x: 0, duration: 0.01 }, 0);
   for (let k = 0; k < K - 1; k++) {
     const d = tk(k + 1) - tk(k);
     tl.to(palavras, { x: () => centro(k + 1), duration: d, ease: 'power2.inOut' }, tk(k));
-    if (mobile) tl.to(ponteiro, { x: () => MARCOS[k + 1] * pxMin(), duration: d, ease: 'power2.inOut' }, tk(k));
-    else tl.to(trilho, { x: () => -MARCOS[k + 1] * pxMin(), duration: d, ease: 'power2.inOut' }, tk(k));
+    tl.to(ponteiro, { x: () => MARCOS[k + 1] * pxMin(), duration: d, ease: 'power2.inOut' }, tk(k));
   }
 
   passos.forEach((li, k) => {

@@ -36,7 +36,7 @@ montarServicosMobile();
 garantirDados();
 
 // ---------- Rolagem suave ----------
-const lenis = new Lenis({ lerp: reduzido ? 1 : 0.08, smoothWheel: !reduzido, wheelMultiplier: 0.95, touchMultiplier: 1.4 });
+const lenis = new Lenis({ lerp: reduzido ? 1 : 0.07, smoothWheel: !reduzido, wheelMultiplier: 0.8, touchMultiplier: 1.4 });
 lenis.on('scroll', ScrollTrigger.update);
 gsap.ticker.add((t) => lenis.raf(t * 1000));
 gsap.ticker.lagSmoothing(0);
@@ -80,9 +80,12 @@ const DESLOCAMENTO = { '#equipe': 0.4, '#servicos': 0.01, '#combo': 0.02 };
 let pulando = false;
 export async function pular(hash, { instantaneo = false } = {}) {
   let alvo = hash && hash !== '#' ? $(hash) : null;
-  if (hash === '#servicos' && ehMobile()) {
+  if (hash === '#servicos') {
+    // No celular o Corte está no fim da faixa da casa; no computador os serviços acabam de entrar pela lateral
     const casa = $('[data-cena="casa"]');
-    const y = casa.getBoundingClientRect().top + window.scrollY + 0.97 * (casa.offsetHeight - innerHeight);
+    const y = ehMobile()
+      ? casa.getBoundingClientRect().top + window.scrollY + 0.97 * (casa.offsetHeight - innerHeight)
+      : alvo.getBoundingClientRect().top + window.scrollY + innerHeight + 4;
     return pularPara(y, hash, instantaneo);
   }
   if (!alvo) return;
@@ -144,6 +147,8 @@ window.addEventListener('dc:modal', (e) => {
 
 // ---------- Vídeos: carregam perto da tela e só tocam quando visíveis ----------
 const carregar = (v) => {
+  v.muted = true;
+  v.playsInline = true;
   if (v.dataset.src && !v.src) { v.src = url(v.dataset.src); v.load(); }
 };
 const obsCarga = new IntersectionObserver((es) => es.forEach((e) => e.isIntersecting && carregar(e.target)), { rootMargin: '600px 0px' });

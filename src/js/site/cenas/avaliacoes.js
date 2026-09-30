@@ -51,6 +51,8 @@ export function cenaAvaliacoes({ gsap, topo, mobile }) {
     return;
   }
 
+  // Todos os cartões no centro exato da tela, independente da altura de cada um
+  gsap.set(cartoes, { xPercent: -50, yPercent: -50 });
   const trocas = [0.33, 0.64];
   trocas.forEach((t, k) => {
     const o = { p: 0 };

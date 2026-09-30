@@ -4,19 +4,23 @@ import { url } from '../../lib/base.js';
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 
-const T0 = 0.1;
-const PASSO = 0.16;
-const DUR = 0.11;
+// A primeira parte da rolagem é a entrada pela lateral (conduzida pela cena da casa).
+// Depois disso vêm as cinco trocas de serviço.
+let T0 = 0.1;
+const PASSO = 0.14;
+const DUR = 0.1;
 const GAP = 2.4; // espaço entre as janelas, em % da altura
 
 export function cenaServicos({ gsap, lenis }) {
   const cena = $('[data-cena="servicos"]');
   const janelas = $$('[data-obturador] .obturador__janela');
-  const textos = $$('.servico-texto');
+  const textos = $$('.servicos__textos .servico-texto');
   const relacionados = $$('.relacionados');
   const abas = $$('[data-aba]');
   const marcador = $('[data-marcador]');
   const N = janelas.length;
+  const entrada = () => window.innerHeight / Math.max(1, cena.offsetHeight - window.innerHeight);
+  T0 = entrada() + 0.06;
   const raio = () => parseFloat(getComputedStyle(janelas[0]).borderTopLeftRadius) || 24;
   let ativo = -1;
   let cenaAtiva = false;
@@ -109,7 +113,7 @@ export function cenaServicos({ gsap, lenis }) {
   // Clicar numa aba leva ao ponto certo da rolagem
   abas.forEach((b, i) => b.addEventListener('click', () => {
     const st = tl.scrollTrigger;
-    const t = i === 0 ? 0.03 : T0 + (i - 1) * PASSO + DUR + 0.02;
+    const t = i === 0 ? T0 - 0.03 : T0 + (i - 1) * PASSO + DUR + 0.02;
     lenis.scrollTo(st.start + t * (st.end - st.start), { duration: 1.4 });
   }));
 
