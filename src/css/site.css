@@ -219,6 +219,7 @@ body.carregando { overflow: hidden; }
   position: absolute; top: 20%; left: 2.2vw; right: 2.2vw; margin: 0;
   font-size: 7.2vw; font-weight: 700; letter-spacing: -0.05em; line-height: .9; color: var(--branco);
 }
+.cartao-numero .cartao-numero__valor--longo { font-size: 5.2vw; }
 .cartao-numero .cartao-numero__valor small { font-size: .38em; letter-spacing: -0.02em; margin-left: .12em; vertical-align: .95em; color: var(--ouro-claro); }
 .cartao-numero h3 { margin: 0 0 10px; font-size: clamp(20px, 1.75vw, 30px); letter-spacing: -0.03em; }
 .cartao-numero p { margin: 0; color: var(--texto-2); font-size: clamp(15px, 1.15vw, 19px); line-height: 1.35; }
@@ -353,7 +354,7 @@ body.carregando { overflow: hidden; }
 .telefone__tela { position: relative; height: 100%; border-radius: 10.5% / 5%; overflow: hidden; background: #0d0d0c; }
 .telefone__barra { position: relative; z-index: 3; display: flex; justify-content: space-between; align-items: center; padding: 7% 9% 0; font-size: clamp(9px, .8vw, 13px); font-weight: 700; }
 .telefone__ilha { width: 32%; height: 1.9em; border-radius: 99px; background: #000; }
-.tela { position: absolute; inset: 0; padding: 22% 8% 8%; display: flex; flex-direction: column; font-size: clamp(9px, .82vw, 14px); will-change: transform, opacity; }
+.tela { position: absolute; inset: 0; background: #0d0d0c; padding: 22% 8% 8%; display: flex; flex-direction: column; font-size: clamp(9px, .82vw, 14px); will-change: transform, opacity; }
 .tela__passo { margin: 0; color: var(--texto-3); }
 .tela__titulo { margin: .3em 0 1em; font-size: 1.75em; font-weight: 700; letter-spacing: -0.03em; line-height: 1.05; }
 .tela__lista, .tela__pessoas, .tela__horas { list-style: none; margin: 0; padding: 0; }
@@ -521,7 +522,7 @@ body.carregando { overflow: hidden; }
 }
 .final__palco { position: relative; text-align: center; }
 .final__gigante { margin: 0; font-size: 21vw; font-weight: 800; letter-spacing: -0.06em; line-height: .85; color: var(--branco); position: relative; z-index: 1; }
-.final__emblema { --hex-w: 13vw; top: 86%; left: 61%; z-index: 2; transform: rotate(-18deg); box-shadow: none; filter: drop-shadow(0 30px 40px rgba(0,0,0,.6)); }
+.final__emblema { --hex-w: 12vw; top: 102%; left: 72%; z-index: 2; transform: rotate(-18deg); box-shadow: none; filter: drop-shadow(0 30px 40px rgba(0,0,0,.6)); }
 .final__acao { position: relative; z-index: 3; margin-top: clamp(40px, 8vh, 90px); display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center; padding: 0 20px; }
 .final__acao p { margin: 0; color: rgba(255,255,255,.85); font-size: clamp(16px, 1.15vw, 19px); max-width: 32em; }
 .lembrete { position: relative; z-index: 3; margin: clamp(40px, 7vh, 80px) auto 0; width: min(560px, calc(100% - 40px)); text-align: center; }
@@ -560,6 +561,7 @@ body.carregando { overflow: hidden; }
   .casa__cartoes { gap: 4vw; padding-right: 6vw; }
   .cartao-numero { width: 78vw; height: 64vh; padding: 24px; }
   .cartao-numero .cartao-numero__valor { font-size: 22vw; left: 24px; right: 24px; }
+  .cartao-numero .cartao-numero__valor--longo { font-size: 15vw; }
   .casa__emblema { --hex-w: 34vw; }
 
   .cena--servicos, .cena--app, .cena--equipe, .cena--avaliacoes { height: auto; }

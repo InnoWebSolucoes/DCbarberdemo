@@ -5,7 +5,7 @@ import { resumoServicos, processarFila } from './api.js';
 import { emailConfirmacao, emailFatura, emailLivre, preencher } from './templates.js';
 import { minutos, isoDia, primeiroNome } from '../lib/format.js';
 
-const SEED_VERSAO = 5;
+const SEED_VERSAO = 6;
 
 let rnd = mulberry32(20260930);
 function mulberry32(a) {
@@ -105,7 +105,7 @@ export async function semear() {
     const criado = new Date(hoje.getTime() - Math.floor(80 + rnd() * 300) * 86400000);
     const c = {
       id: novoId(), nome, email: emailDe(nome), telefone: telefone(), senhaHash: null,
-      marketing: rnd() < 0.72, lembreteDias: pick([21, 21, 30, 30, 45]), origem: pick(['agendamento', 'agendamento', 'site', 'balcao']),
+      marketing: rnd() < 0.72, lembreteDias: pick([21, 21, 28, 28, 42]), origem: pick(['agendamento', 'agendamento', 'site', 'balcao']),
       criadoEm: criado.toISOString(), ...extra,
     };
     clientes.push(c);

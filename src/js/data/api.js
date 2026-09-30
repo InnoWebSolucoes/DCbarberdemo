@@ -85,7 +85,7 @@ export function sessaoAtual() {
   return db.listSync('clientes').find((c) => c.id === id) || null;
 }
 
-export async function cadastrar({ nome, email, telefone, senha, marketing = true }) {
+export async function cadastrar({ nome, email, telefone, senha, marketing }) {
   const e = normEmail(email);
   if (!nome?.trim() || !e || !senha) throw new Error('Preencha nome, e-mail e senha.');
   if (senha.length < 6) throw new Error('A senha precisa ter pelo menos 6 caracteres.');
@@ -94,10 +94,10 @@ export async function cadastrar({ nome, email, telefone, senha, marketing = true
   let cliente;
   if (existente) {
     if (existente.senhaHash) throw new Error('Já existe uma conta com este e-mail. Entre com a sua senha.');
-    cliente = await db.update('clientes', existente.id, { nome: nome.trim(), telefone: telefone || existente.telefone, senhaHash, marketing });
+    cliente = await db.update('clientes', existente.id, { nome: nome.trim(), telefone: telefone || existente.telefone, senhaHash, marketing: marketing ?? existente.marketing });
   } else {
     cliente = await db.insert('clientes', {
-      nome: nome.trim(), email: e, telefone: telefone || '', senhaHash, marketing,
+      nome: nome.trim(), email: e, telefone: telefone || '', senhaHash, marketing: marketing ?? true,
       lembreteDias: 21, origem: 'site',
     });
   }
@@ -146,7 +146,7 @@ export async function assinarNewsletter({ email, nome = '' }) {
     await db.update('clientes', existente.id, { marketing: true });
     return existente;
   }
-  return db.insert('clientes', { nome: nome || e.split('@')[0], email: e, telefone: '', senhaHash: null, marketing: true, lembreteDias: 30, origem: 'newsletter' });
+  return db.insert('clientes', { nome: nome || e.split('@')[0], email: e, telefone: '', senhaHash: null, marketing: true, lembreteDias: 28, origem: 'newsletter' });
 }
 
 // ---------- Agendamentos ----------
@@ -195,6 +195,8 @@ export async function criarAgendamento({ servicos, profissionalId, inicio, clien
 }
 
 export async function cancelarAgendamento(id, por = 'cliente') {
+  const atual = await db.get('agendamentos', id);
+  if (!atual || atual.status === 'cancelado') return atual;
   const ag = await db.update('agendamentos', id, { status: 'cancelado', canceladoPor: por, canceladoEm: new Date().toISOString() });
   if (ag?.clienteEmail) await registrarEmail({ para: ag.clienteEmail, nomePara: ag.clienteNome, clienteId: ag.clienteId, agendamentoId: ag.id, tipo: 'cancelamento', assunto: `Horário cancelado: ${ag.codigo}`, html: emailCancelamento(ag) });
   return ag;

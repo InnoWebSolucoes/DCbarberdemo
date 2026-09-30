@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Minha conta | DC Barbershop</title>
+  <meta name="description" content="Seus horários, faturas e lembretes da DC Barbershop, no Porto.">
+  <meta name="theme-color" content="#000000">
+  <meta name="robots" content="noindex">
+  <link rel="icon" type="image/png" href="/brand/logo-gold.png">
+  <link rel="preload" href="/fonts/cabinet-grotesk-500.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/cabinet-grotesk-700.woff2" as="font" type="font/woff2" crossorigin>
+  <script type="module" src="/src/js/conta/main.js"></script>
+</head>
+<body class="ct-body">
+  <a class="ct-pular" href="#ct-principal">Pular para o conteúdo</a>
+  <header class="ct-topo">
+    <div class="ct-topo__in">
+      <a class="ct-logo" href="/" aria-label="DC Barbershop, página inicial">
+        <span class="dc-monograma" aria-hidden="true"></span>
+        <span class="ct-logo__txt">DC Barbershop</span>
+      </a>
+      <div class="ct-topo__acoes">
+        <button type="button" class="btn btn--ouro ct-topo__agendar" data-agendar>Agendar horário</button>
+        <button type="button" class="ct-topo__sair" data-sair hidden>Sair</button>
+      </div>
+    </div>
+  </header>
+  <main id="ct-principal" class="ct-principal" tabindex="-1">
+    <div class="ct-carregando" aria-live="polite">Carregando sua conta</div>
+  </main>
+</body>
+</html>
