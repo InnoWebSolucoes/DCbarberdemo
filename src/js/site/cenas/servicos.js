@@ -33,7 +33,7 @@ export function cenaServicos({ gsap, lenis }) {
   const tocar = () => janelas.forEach((j, i) => {
     const v = midia(i);
     if (v?.tagName !== 'VIDEO') return;
-    if (i === ativo && cenaAtiva) v.play().catch(() => {});
+    if (i === ativo && cenaAtiva) { v.muted = true; v.playsInline = true; v.play().catch(() => {}); }
     else v.pause();
   });
 

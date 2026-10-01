@@ -131,7 +131,7 @@ export function cenaAbertura({ gsap, mobile }) {
       onUpdate: (st) => {
         texto.style.pointerEvents = st.progress > 0.05 ? 'none' : '';
         if (st.progress > 0.985) video.pause();
-        else if (video.paused) video.play().catch(() => {});
+        else if (video.paused) { video.muted = true; video.play().catch(() => {}); }
       },
       onRefresh: () => desenhar(),
     },

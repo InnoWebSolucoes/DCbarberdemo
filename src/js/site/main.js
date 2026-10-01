@@ -151,10 +151,24 @@ const carregar = (v) => {
   v.playsInline = true;
   if (v.dataset.src && !v.src) { v.src = url(v.dataset.src); v.load(); }
 };
+// Vídeos que o sistema não deixou tocar sozinhos (ex.: iPhone em modo de pouca energia).
+// Eles tentam de novo no primeiro toque ou clique da pessoa em qualquer lugar da página.
+const bloqueados = new Set();
+export const tocarVideo = (v) => {
+  v.muted = true;
+  v.playsInline = true;
+  const p = v.play();
+  if (p?.catch) p.catch(() => bloqueados.add(v));
+};
+const destravar = () => {
+  bloqueados.forEach((v) => { if (v.isConnected) v.play().then(() => bloqueados.delete(v)).catch(() => {}); });
+};
+['touchend', 'click', 'keydown'].forEach((ev) => window.addEventListener(ev, destravar, { passive: true }));
+
 const obsCarga = new IntersectionObserver((es) => es.forEach((e) => e.isIntersecting && carregar(e.target)), { rootMargin: '600px 0px' });
 const obsPlay = new IntersectionObserver((es) => es.forEach((e) => {
   const v = e.target;
-  if (e.isIntersecting) { carregar(v); v.play().catch(() => {}); } else v.pause();
+  if (e.isIntersecting) { carregar(v); tocarVideo(v); } else { v.pause(); bloqueados.delete(v); }
 }), { threshold: 0.15 });
 $$('.insta video, video[data-auto]').forEach((v) => { obsCarga.observe(v); obsPlay.observe(v); });
 
@@ -196,14 +210,14 @@ form?.addEventListener('submit', async (e) => {
 
 // ---------- Cenas ----------
 const video = $('[data-hero-video]');
-video.src = url(ehMobile() ? '/media/video/hero-mobile.mp4' : '/media/video/hero.mp4');
+video.src = url(ehMobile() ? '/media/video/hero-mobile.mp4?v=2' : '/media/video/hero.mp4?v=2');
 if (ehMobile()) video.poster = url('/media/video/hero-mobile.jpg');
 
 const ctxBase = { gsap, ScrollTrigger, lenis, topo: controleTopo, reduzido };
 
 async function iniciar() {
   await document.fonts?.ready;
-  video.play().catch(() => {});
+  tocarVideo(video);
   await introAbertura({ ...ctxBase, mobile: ehMobile() });
   document.body.classList.remove('carregando');
   lenis.start();
